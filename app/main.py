@@ -58,7 +58,7 @@ async def get_simulation_history():
     # 3. Return execution history as JSON
     return {"history": history}
 
-@app.post("/upload/")
+@app.post("/upload-to-s3/")
 async def upload_file(file: UploadFile = File(...)):
     try:
         file_url = await upload_file_to_s3(file)
