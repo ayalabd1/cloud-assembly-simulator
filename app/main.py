@@ -1,6 +1,8 @@
 from datetime import datetime
 from fastapi import FastAPI, File, UploadFile
 import uvicorn
+from fastapi import UploadFile, File, HTTPException
+from app.s3_service import upload_file_to_s3
 
 # Import database collection and simulation engine
 from app.database import history_collection
@@ -55,3 +57,18 @@ async def get_simulation_history():
 
     # 3. Return execution history as JSON
     return {"history": history}
+
+@app.post("/upload/")
+async def upload_file(file: UploadFile = File(...)):
+    try:
+        file_url = await upload_file_to_s3(file)
+        record = {
+            "filename": file.filename,
+            "file_url": file_url,
+            "status": "uploaded"
+        }
+        await history_collection.insert_one(record)
+        
+        return {"message": "File uploaded successfully", "file_url": file_url}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
