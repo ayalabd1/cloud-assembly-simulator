@@ -4,7 +4,7 @@ from fastapi import UploadFile
 
 AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
-AWS_REGION = os.getenv("AWS_REGION", "eu-central-1")
+AWS_REGION = os.getenv("AWS_REGION", "eu-north-1")
 AWS_BUCKET_NAME = os.getenv("AWS_BUCKET_NAME")
 
 s3_client = boto3.client(
