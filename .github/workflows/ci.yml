@@ -25,5 +25,7 @@ jobs:
         pip install -r requirements.txt
 
     - name: Run automated unit tests
+      env:
+        PYTHONPATH: .
       run: |
         pytest
