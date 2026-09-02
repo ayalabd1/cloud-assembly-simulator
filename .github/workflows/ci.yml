@@ -27,5 +27,6 @@ jobs:
     - name: Run automated unit tests
       env:
         PYTHONPATH: .
+        MONGO_URL: mongodb://localhost:27017/testdb
       run: |
         pytest
