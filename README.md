@@ -1,78 +1,52 @@
-# cloud-assembly-simulator
+# 🚀 Cloud-Based MIPS Assembly Simulator
 
-A high-performance **Async Assembly Code Simulator & Execution Engine** built with **FastAPI**, **Python**, and **MongoDB Atlas**. 
-
-This cloud-native system allows users to execute custom MIPS Assembly code instructions (`ADD`, `ADDI`, `SUB`, `LW`, `SW`, `BEQ`), calculate register states and memory layouts in real time, and persist simulation history to the cloud.
+A high-performance, cloud-native virtual MIPS CPU assembly simulator built with FastAPI, MongoDB, and AWS S3. Fully containerized with Docker and featuring automated CI/CD pipelines.
 
 ---
 
-## System Architecture
+## 🛠 Architecture & Technologies
 
-* **Framework:** [FastAPI](https://fastapi.tiangolo.com/) (Asynchronous Web Framework)
-* **Database:** [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) (Cloud NoSQL Database)
-* **Database Driver:** [Motor](https://motor.readthedocs.io/) (Async Python driver for MongoDB)
-* **Execution Engine:** Custom MIPS Instruction Set Simulator (`app/simulator.py`)
-* **Environment Management:** `python-dotenv` for secure secret handling
-
----
-
-## Features
-
-- **Asynchronous Execution:** Handles multiple simulation requests concurrently without blocking the main event loop.
-- **RESTful Endpoints:**
-  - `POST /upload-assembly`: Uploads `.asm` files, parses instructions, executes simulation, and saves state to MongoDB Atlas.
-  - `GET /history`: Retrieves the 10 most recent simulation runs sorted chronologically.
-- **Security First:** Connection strings and credentials are safely managed via environment variables (`.env`).
+- **Backend:** Python 3.11, FastAPI, Uvicorn
+- **Core Logic:** Custom Virtual MIPS CPU Engine (R, I, J instruction execution)
+- **Database:** MongoDB Atlas (via motor async driver) for execution history
+- **Storage:** AWS S3 (via boto3) for assembly source code and artifact persistence
+- **Containerization:** Docker & Docker Compose
+- **CI/CD:** GitHub Actions (Automated pytest suite) + Render Deployment
 
 ---
 
-## Project Structure
+## 🏗 System Architecture Flow
 
-```text
-cloud-assembly-simulator/
-├── app/
-│   ├── database.py      # MongoDB Atlas connection & Motor client initialization
-│   ├── main.py          # FastAPI application & REST API routes (POST/GET)
-│   └── simulator.py     # Custom Virtual CPU Engine (MIPS Registers & Memory)
-├── .env.example         # Template for environment variables
-├── .gitignore            # Git exclusion rules (securing .env and venv)
-├── README.md            # Project documentation
-└── requirements.txt     # Python dependencies
+[ Client / Postman ] ──> [ FastAPI Server ]
+                              │
+             ┌────────────────┼────────────────┐
+             ▼                ▼                ▼
+     [ CPU Simulator ]  [ AWS S3 Bucket ]  [ MongoDB Atlas ]
 
-Getting Started
-1. Prerequisites
-Python 3.10+
+---
 
-Active MongoDB Atlas Cluster
+## 🚀 Live Demo
 
-2. Installation & Setup
-Clone the repository:
+- **Live API Endpoint:** [https://cloud-assembly-simulator-1.onrender.com](https://cloud-assembly-simulator-1.onrender.com)
+- **Interactive Swagger Docs:** [https://cloud-assembly-simulator-1.onrender.com/docs](https://cloud-assembly-simulator-1.onrender.com/docs)
 
-git clone [https://github.com/ayalabd1/cloud-assembly-simulator.git](https://github.com/ayalabd1/cloud-assembly-simulator.git)
-cd cloud-assembly-simulator
+---
 
-Create and activate a virtual environment:
+## ⚙️ Local Setup Instructions
 
-python -m venv venv
-venv\Scripts\activate
+1. Clone the repository:
+   git clone [https://github.com/ayalabd1/cloud-assembly-simulator.git](https://github.com/ayalabd1/cloud-assembly-simulator.git)
+   cd cloud-assembly-simulator
 
-Install dependencies:
+2. Configure Environment Variables:
+   Create a .env file based on .env.example:
+   MONGO_URL=your_mongodb_connection_string
+   AWS_ACCESS_KEY_ID=your_aws_key
+   AWS_SECRET_ACCESS_KEY=your_aws_secret
+   AWS_BUCKET_NAME=your_s3_bucket
 
-pip install -r requirements.txt
-Configure Environment Variables:
+3. Run with Docker Compose:
+   docker-compose up --build
 
-Create a .env file in the root directory based on .env.example:
-
-MONGO_URL=mongodb+srv://<username>:<password>@cluster0.xxx.mongodb.net/?retryWrites=true&w=majority
-3. Running the Server
-Start the FastAPI application using Uvicorn:
-
-uvicorn app.main:app --reload
-Interactive API documentation (Swagger UI) will be available at:
-http://127.0.0.1:8000/docs
-
-
-### GitHub:
-git add README.md
-git commit -m "Update README with full architecture and Getting Started instructions"
-git push origin main
+4. Run Unit Tests:
+   pytest
