@@ -11,6 +11,10 @@ from app.simulator import run_assembly_simulation
 # Initialize FastAPI application
 app = FastAPI(title="Cloud Assembly Simulator", version="1.0")
 
+@app.get("/")
+async def read_root():
+    return {"message": "Welcome to Cloud Assembly Simulator API"}
+
 
 # Endpoint 1: Upload assembly file, run simulator, and save results to MongoDB
 @app.post("/upload-assembly")
